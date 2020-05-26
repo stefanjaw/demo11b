@@ -1,0 +1,85 @@
+<odoo>
+  <data>
+    
+    <!-- Inherit Form view -->
+    <record id="invoice_inherit" model="ir.ui.view">
+      <field name="name">invoice.form</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//tree/field[@name='name']" position="after">
+              <field name="tipo"  attrs="{'readonly':[('product_id','!=',False)]}"/>
+              <field name="tipo"  invisible="1"/>
+          </xpath> 
+      </field>
+    </record>
+
+      <!-- Inherit supplier Form view -->
+    <record id="invoice_inherit_supplier" model="ir.ui.view">
+      <field name="name">invoice.form</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_supplier_form"/>
+      <field name="arch" type="xml">
+          <xpath expr="//tree/field[@name='name']" position="after">
+              <field name="tipo"  attrs="{'readonly':[('product_id','!=',False)]}"/>
+              <field name="tipo"  invisible="1"/>
+          </xpath> 
+      </field>
+    </record>
+
+   <record id="inherit_account_invoice_line" model="ir.ui.view">
+     <field name="name">inherit.account.invoice.line</field>
+     <field name="model">account.invoice.line</field>
+     <field name="inherit_id" ref="account.view_invoice_line_tree"/>
+     <field name="arch" type="xml">
+      <tree position="attributes">
+       <attribute name="editable">bottom</attribute>
+       <attribute name="create">false</attribute>
+      </tree>
+      
+     <field name="name" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+      <field name="account_id" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+      <field name="quantity" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+      <field name="price_unit" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+      <field name="uom_id" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+       <field name="name" position="before">
+          <field name="tipo" readonly="1"/>
+          <field name="tipo_factura"/>
+          <field name="numero"/>
+          <field name="fecha" />
+          <field name="product_id" readonly="1"/>
+       </field>
+       <field name="price_unit" position="after">
+          <field name="invoice_line_tax_ids" widget="many2many_tags" readonly="1"/>
+          <field name="total_impuesto" widget="monetary"/>
+       </field>
+
+     </field>
+   </record>
+
+  
+    <record model="ir.actions.act_window" id="contabilidad_cr.action_window">
+      <field name="name">Contabilidad</field>
+      <field name="res_model">account.invoice.line</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+   <menuitem
+     id="contabilidad_menu"
+     name="Detalle contable"
+     action="contabilidad_cr.action_window"
+     parent="account.menu_finance_entries"
+     sequence="9"/>
+
+  </data>
+</odoo>
